@@ -6,36 +6,39 @@ import Checkbox from "./Checkbox";
 import Form from "./Form";
 import Info from "./Info";
 import TextInput from "./TextInput";
+
 export default function SignupForm() {
-  const [username, setUsername] = useState();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [confirmPassword, setConfirmPAssword] = useState();
-  const [agree, setAgree] = useState();
+  const [username, setUsername] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [agree, setAgree] = useState("");
+
   const [error, setError] = useState();
   const [loading, setLoading] = useState();
+
   const { signup } = useAuth();
-  const navigation = useNavigate();
+  const history = useNavigate();
+
   async function handleSubmit(e) {
     e.preventDefault();
-    //default validation
-    if (!username || !email || !password || !confirmPassword || !agree) {
-      return setError("Please fill in all the fields");
-    }
+    // do validation
     if (password !== confirmPassword) {
-      return setError("Passwords do not match");
+      return setError("Passwords don't match!");
     }
+
     try {
       setError("");
       setLoading(true);
       await signup(email, password, username);
-      navigation.push("/");
-    } catch (error) {
-      console.log(error);
+      history("/");
+    } catch (err) {
+      console.log(err);
       setLoading(false);
-      setError("Fail to signup");
+      setError("Failed to create an account!");
     }
   }
+
   return (
     <Form style={{ height: "500px" }} onSubmit={handleSubmit}>
       <TextInput
@@ -46,6 +49,7 @@ export default function SignupForm() {
         value={username}
         onChange={(e) => setUsername(e.target.value)}
       />
+
       <TextInput
         type="text"
         required
@@ -54,6 +58,7 @@ export default function SignupForm() {
         value={email}
         onChange={(e) => setEmail(e.target.value)}
       />
+
       <TextInput
         type="password"
         required
@@ -62,26 +67,29 @@ export default function SignupForm() {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+
       <TextInput
         type="password"
         required
         placeholder="Confirm password"
         icon="lock_clock"
         value={confirmPassword}
-        onChange={(e) => setConfirmPAssword(e.target.value)}
+        onChange={(e) => setConfirmPassword(e.target.value)}
       />
+
       <Checkbox
-        type="checkbox"
-        text=" I agree to the Terms &amp; Conditions"
         required
+        text=" I agree to the Terms &amp; Conditions"
         value={agree}
         onChange={(e) => setAgree(e.target.value)}
       />
-      disable
-      <Button type="submit" disable={loading}>
-        Submit now
+
+      <Button disabled={loading} type="submit">
+        <span>Submit Now</span>
       </Button>
+
       {error && <p className="error">{error}</p>}
+
       <Info>
         Already have an account? <Link to="/login">Login</Link> instead.
       </Info>

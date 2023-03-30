@@ -12,6 +12,8 @@
   border-radius: 8px;
   cursor: pointer;
   border: 0px;
+  width: 100%;
+  margin: 13px 0 12px 0;
 }
 
 .button:hover {

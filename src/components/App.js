@@ -7,17 +7,24 @@ import Login from "./pages/Login";
 import Quiz from "./pages/Quiz";
 import Result from "./pages/Result";
 import Signup from "./pages/Signup";
+import PrivateOutlet from "./PrivateOutlet";
+import PublicOutlet from "./PublicOutlet";
 function App() {
   return (
     <Router>
       <AuthProvider>
         <Layout>
           <Routes>
-            <Route exact path="/" Component={Home} />
-            <Route exact path="/signup" Component={Signup} />
-            <Route exact path="/login" Component={Login} />
-            <Route exact path="/quiz" Component={Quiz} />
-            <Route exact path="/result" Component={Result} />
+            <Route path="/" element={<Home />} />
+            <Route path="/*" element={<PublicOutlet />}>
+              <Route path="signup" element={<Signup />} />
+              <Route path="login" element={<Login />} />
+            </Route>
+
+            <Route path="/*" element={<PrivateOutlet />}>
+              <Route path="quiz" element={<Quiz />} />
+              <Route path="result" element={<Result />} />
+            </Route>
           </Routes>
         </Layout>
       </AuthProvider>
