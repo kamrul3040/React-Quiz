@@ -1,15 +1,29 @@
-import { get, getDatabase, orderByKey, query, ref } from "firebase/database";
+import {
+  get,
+  getDatabase,
+  limitToFirst,
+  orderByKey,
+  query,
+  ref,
+  startAt,
+} from "firebase/database";
 import { useEffect, useState } from "react";
-export default function useVideoList() {
+export default function useVideoList(page) {
   const [loading, setLoading] = useState();
   const [error, setError] = useState();
-  const [viedeos, setVideos] = useState([]);
+  const [videos, setVideos] = useState([]);
+  const [hasMore, setHasMore] = useState(true);
   useEffect(() => {
     async function fetchVideos() {
       //database rellated work
       const db = getDatabase();
       const videoRef = ref(db, "videos");
-      const videoQuery = query(videoRef, orderByKey());
+      const videoQuery = query(
+        videoRef,
+        orderByKey(),
+        startAt("" + page),
+        limitToFirst(8)
+      );
 
       //request firebase database
       try {
@@ -18,22 +32,19 @@ export default function useVideoList() {
         const snapshot = await get(videoQuery);
         setLoading(false);
         if (snapshot.exists()) {
-          // setVideos((prevVideos) => {
-          //   return [...prevVideos, ...Object.values(snapshot.val())];
-
-          // });
-          console.log(snapshot.val());
-          JSON.parse(snapshot.val());
+          setVideos((prevVideos) => {
+            return [...prevVideos, ...Object.values(snapshot.val())];
+          });
         } else {
-          // setHasMore(false);
+          setHasMore(false);
         }
       } catch (err) {
         console.log(err);
-        setLoading(false);
         setError(true);
+        setLoading(false);
       }
     }
     fetchVideos();
-  }, []);
-  return { loading, error, viedeos };
+  }, [page]);
+  return { loading, error, videos, hasMore };
 }
