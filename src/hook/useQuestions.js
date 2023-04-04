@@ -21,7 +21,6 @@ export default function useQuestion(videoID) {
           setquestions((prevquestions) => {
             return [...prevquestions, ...Object.values(snapshot.val())];
           });
-          console.log(snapshot.val());
         }
       } catch (err) {
         console.log(err);
