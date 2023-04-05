@@ -28,7 +28,9 @@ export default function useQuestion(videoID) {
         setLoading(false);
       }
     }
+
     fetchQuestions();
   }, [videoID]);
+  console.log(questions);
   return { loading, error, questions };
 }
