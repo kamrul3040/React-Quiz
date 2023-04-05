@@ -1,7 +1,7 @@
 import { getDatabase, ref, set } from "firebase/database";
 import _ from "lodash";
 import { useEffect, useReducer, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import useQuestions from "../../hook/useQuestions";
 import Answers from "../Answers";
@@ -30,9 +30,9 @@ const reducer = (state, action) => {
 };
 
 export default function Quiz() {
-  const history = useNavigate();
-  const location = history;
+  const location = useLocation();
   const { state } = location;
+  const { videoTitle } = state;
   // const { videoState } = state;
   console.log(state);
   const { id } = useParams();
@@ -111,7 +111,7 @@ export default function Quiz() {
             progress={percentage}
             submit={submitQuestion}
           />
-          <MiniPlayer id={id} />
+          <MiniPlayer id={id} videoTitle={videoTitle} />
         </>
       )}
     </>
